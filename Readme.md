@@ -21,7 +21,7 @@ The **Professional Job Email Generator** is a web application designed to help u
 ## Tech Stack
 
 - **Frontend**: React.js, TypeScript
-- **Styling**: CSS/SCSS for responsive and clean design
+- **Styling**: Tailwind css for responsive and clean design
 - **Deployment**: Vercel
 
 ## Installation & Setup
