@@ -107,7 +107,7 @@ export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormPr
               name="currentCompany"
               value={formData.currentCompany}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="block w-full my-2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
               placeholder="e.g., Current Corp"
               required
             />
@@ -120,7 +120,7 @@ export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormPr
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="block w-full my-2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
               placeholder="e.g., +1234567890"
               required
             />
