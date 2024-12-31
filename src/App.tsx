@@ -111,7 +111,7 @@ Job Post: ${formData.jobLink}`;
               <button
                 onClick={() => setIsHR(!isHR)}
                 className="relative inline-flex items-center rounded-full transition-all duration-300"
-                style={{ backgroundColor: isHR ? '#818cf8' : '#4f46e5' }}
+                style={{ backgroundColor:'#4f46e5' }}
               >
                 <span className="px-4 py-2 rounded-full text-white">
                   {isHR ? 'HR' : 'Employee'}
