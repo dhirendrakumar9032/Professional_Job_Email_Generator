@@ -6,10 +6,11 @@ interface EmailFormProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   isHR: boolean;
+  isEmail: boolean;
   onSubmit: (e: React.FormEvent) => void;
 }
 
-export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormProps) {
+export function EmailForm({ formData, setFormData, isHR, onSubmit,isEmail }: EmailFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -68,8 +69,7 @@ export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormPr
         />
       </div>
 
-      {!isHR && (
-        <>
+      
           <div>
             <label className="block text-sm font-medium text-gray-700">Company Name</label>
             <input
@@ -82,7 +82,7 @@ export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormPr
               required
             />
           </div>
-
+          {(!isEmail&&!isHR)&&(<>
           <div>
             <label className="block text-sm font-medium text-gray-700">Job Post Link</label>
             <input
@@ -95,8 +95,8 @@ export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormPr
               required
             />
           </div>
-        </>
-      )}
+        </>)}
+      
 
       {isHR && (
         <>
@@ -112,21 +112,21 @@ export function EmailForm({ formData, setFormData, isHR, onSubmit }: EmailFormPr
               required
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="block w-full my-2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-              placeholder="e.g., +1234567890"
-              required
-            />
-          </div>
         </>
       )}
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+        <input
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          className="block w-full my-2 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+          placeholder="e.g., +1234567890"
+          required
+        />
+      </div>
 
       <button
         type="submit"

@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-import {  ToggleLeft, ToggleRight } from 'lucide-react';
+import { ToggleLeft, ToggleRight } from 'lucide-react';
 import { EmailForm } from './components/EmailForm';
 import { EmailPreview } from './components/EmailPreview';
 import { FormData } from './types';
 
 function App() {
   const [isHR, setIsHR] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
+  const [emailGenerated, setEmailGenerated] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    name: 'Dhirendra',
-    position: '',
-    experience: '',
+    name: 'Dhirendra Kumar',
+    position: 'Frontend Developer',
+    experience: '3',
     company: '',
     jobLink: '',
-    phone: '',
+    phone: '8604390422',
     recipientName: '',
-    currentCompany: '',
+    currentCompany: 'Qapita Fintech India Pvt Ltd',
   });
-  const [emailGenerated, setEmailGenerated] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +25,39 @@ function App() {
   };
 
   const generateEmail = () => {
+    if (isEmail && !isHR) {
+      return `
+Hi ${formData.recipientName},
+
+I hope you're doing well! I'm a Frontend Developer with over 3 years of experience in building scalable projects. I'm currently exploring new opportunities and am very interested in the open ${formData.position} position at ${formData.company}.
+
+Could I ask for your help with a referral? I've attached my resume for your review.
+
+Thank you so much for your time and assistance!
+
+Best regards,
+${formData.name}
+${formData.phone}`;
+    } else {
+      return `
+Dear ${formData.recipientName},
+
+I hope this email finds you well. My name is ${formData.name}, and I am a Frontend Developer at ${formData.currentCompany} with over 3 years of experience in creating scalable and effective web applications. I am interested in the ${formData.position} role currently available at ${formData.company} and am eager to bring my expertise to your team.
+
+Attached is my resume for your review. Could you please advise on the next steps in the application process?
+
+Thank you for considering my application. I look forward to the opportunity to discuss how I can contribute to your team.
+
+Best regards,
+${formData.name}
+${formData.phone}`;
+    }
+  };
+
+  const generateMessage = () => {
     if (isHR) {
-      return `Hi ${formData.recipientName},
+      return `
+Hi ${formData.recipientName},
 
 I hope this message finds you well. 
 
@@ -37,11 +69,11 @@ Thank you for your time and consideration.
 
 Best regards,
 ${formData.name}
-${formData.phone}
-`;
+${formData.phone}`;
     }
 
-    return `Hi ${formData.recipientName},
+    return `
+Hi ${formData.recipientName},
 
 Great to connect with you!
 
@@ -53,10 +85,11 @@ Job Post: ${formData.jobLink}`;
   };
 
   const handleCopy = async () => {
+    const text = isEmail ? generateEmail() : generateMessage();
     try {
-      await navigator.clipboard.writeText(generateEmail());
+      await navigator.clipboard.writeText(text);
     } catch (err) {
-      console.error('Failed to copy text: ', err);
+      console.error('Failed to copy text:', err);
     }
   };
 
@@ -74,7 +107,7 @@ Job Post: ${formData.jobLink}`;
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center gap-10 justify-center mb-8">
               <button
                 onClick={() => setIsHR(!isHR)}
                 className="relative inline-flex items-center rounded-full transition-all duration-300"
@@ -89,6 +122,20 @@ Job Post: ${formData.jobLink}`;
                   <ToggleLeft className="w-6 h-6 text-white mx-2" />
                 )}
               </button>
+              <button
+                onClick={() => setIsEmail(!isEmail)}
+                className="relative inline-flex items-center rounded-full transition-all duration-300"
+                style={{ backgroundColor: isEmail ? '#818cf8' : '#4f46e5' }}
+              >
+                <span className="px-4 py-2 rounded-full text-white">
+                  {isEmail ? 'Email' : 'LinkedIn'}
+                </span>
+                {isEmail ? (
+                  <ToggleRight className="w-6 h-6 text-white mx-2" />
+                ) : (
+                  <ToggleLeft className="w-6 h-6 text-white mx-2" />
+                )}
+              </button>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -97,11 +144,12 @@ Job Post: ${formData.jobLink}`;
                 setFormData={setFormData}
                 isHR={isHR}
                 onSubmit={handleSubmit}
+                isEmail={isEmail}
               />
 
               {emailGenerated && (
                 <EmailPreview
-                  email={generateEmail()}
+                  email={isEmail ? generateEmail() : generateMessage()}
                   onCopy={handleCopy}
                 />
               )}
