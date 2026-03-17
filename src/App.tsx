@@ -11,12 +11,12 @@ function App() {
   const [formData, setFormData] = useState<FormData>({
     name: 'Dhirendra Kumar',
     position: 'Frontend Developer',
-    experience: '3',
+    experience: '4',
     company: '',
     jobLink: '',
-    phone: '8604390422',
+    phone: '+91 8604390422',
     recipientName: '',
-    currentCompany: 'Qapita Fintech India Pvt Ltd',
+    currentCompany: 'JLL Technologies',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -75,13 +75,16 @@ ${formData.phone}`;
     return `
 Hi ${formData.recipientName},
 
-Great to connect with you!
+Great connecting with you!
 
-I'm a ${formData.position} with ${formData.experience}+ years of experience in building scalable projects, and I'm currently exploring a new opportunity. I noticed ${formData.company} is hiring for a ${formData.position} position. 
+I’m a ${formData.position} with ${formData.experience}+ years of experience and I’m currently exploring new opportunities. I came across the ${formData.position} role at ${formData.company} and it looks like a great fit for my background.
 
-Would you be open to referring me? It would be a great help!
+I wanted to check if you’d be open to referring me for this role. It would really mean a lot.
 
-Job Post: ${formData.jobLink}`;
+Here’s the job link for reference:
+${formData.jobLink}
+
+Thanks in advance!`;
   };
 
   const handleCopy = async () => {
