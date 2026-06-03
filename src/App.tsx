@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
-import { ToggleLeft, ToggleRight } from 'lucide-react';
 import { EmailForm } from './components/EmailForm';
 import { EmailPreview } from './components/EmailPreview';
-import { FormData } from './types';
+import {
+  ConnectionType,
+  DeliveryType,
+  FormData,
+  RecipientType,
+} from './types';
+
+const clean = (value: string, fallback: string) => value.trim() || fallback;
 
 function App() {
-  const [isHR, setIsHR] = useState(false);
-  const [isEmail, setIsEmail] = useState(false);
+  const [recipientType, setRecipientType] = useState<RecipientType>('employee');
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>('linkedinMessage');
+  const [connectionType, setConnectionType] = useState<ConnectionType>('old');
   const [emailGenerated, setEmailGenerated] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: 'Dhirendra Kumar',
-    position: 'Frontend Developer',
+    role: 'Senior Frontend Engineer',
     experience: '4',
     company: '',
     jobLink: '',
     phone: '+91 8604390422',
     recipientName: '',
     currentCompany: 'JLL Technologies',
+    currentRole: 'Senior Frontend Engineer',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,142 +32,175 @@ function App() {
     setEmailGenerated(true);
   };
 
-  const generateEmail = () => {
-    if (isEmail && !isHR) {
-      return `
-Hi ${formData.recipientName},
+  const templateValues = () => ({
+    company: clean(formData.company, 'the company'),
+    currentCompany: clean(formData.currentCompany, 'my current company'),
+    currentRole: clean(formData.currentRole, 'Senior Frontend Engineer'),
+    experience: clean(formData.experience, '4'),
+    jobLink: formData.jobLink.trim(),
+    name: clean(formData.name, 'Dhirendra Kumar'),
+    phone: formData.phone.trim(),
+    recipientName: clean(formData.recipientName, 'there'),
+    role: clean(formData.role, 'Senior Frontend Engineer'),
+  });
 
-I hope you're doing well! I'm a Frontend Developer with over 3 years of experience in building scalable projects. I'm currently exploring new opportunities and am very interested in the open ${formData.position} position at ${formData.company}.
+  const generateReferralEmail = () => {
+    const values = templateValues();
 
-Could I ask for your help with a referral? I've attached my resume for your review.
+    if (recipientType === 'hr') {
+      return `Dear ${values.recipientName},
 
-Thank you so much for your time and assistance!
+I hope this email finds you well. My name is ${values.name}, and I am a ${values.currentRole} at ${values.currentCompany} with ${values.experience}+ years of experience building scalable web applications.
+
+I came across the ${values.role} role at ${values.company} and believe my frontend background aligns well with the position. I would be grateful if you could guide me on the next steps or consider my profile for the opening.
+
+I have shared my resume for your reference.
 
 Best regards,
-${formData.name}
-${formData.phone}`;
-    } else {
-      return `
-Dear ${formData.recipientName},
-
-I hope this email finds you well. My name is ${formData.name}, and I am a Frontend Developer at ${formData.currentCompany} with over 3 years of experience in creating scalable and effective web applications. I am interested in the ${formData.position} role currently available at ${formData.company} and am eager to bring my expertise to your team.
-
-Attached is my resume for your review. Could you please advise on the next steps in the application process?
-
-Thank you for considering my application. I look forward to the opportunity to discuss how I can contribute to your team.
-
-Best regards,
-${formData.name}
-${formData.phone}`;
+${values.name}
+${values.phone}`;
     }
+
+    return `Hello ${values.recipientName},
+
+Hope you're doing well. I've been following your work and really admire your journey at ${values.company}. I'd love to learn more about your experience working there.
+
+I'm currently a ${values.currentRole} exploring new opportunities and came across an opening for ${values.role} at ${values.company}. I believe my profile aligns well with the role.
+
+If you're open to it, I'd really appreciate a quick conversation. I'd also be grateful if you could consider referring me for this position.
+
+I've shared my resume${values.jobLink ? ' and the job link' : ''} for your reference.${values.jobLink ? `\n${values.jobLink}` : ''}
+
+Looking forward to hearing from you.
+
+Best regards,
+${values.name}
+${values.phone}`;
   };
 
-  const generateMessage = () => {
-    if (isHR) {
-      return `
-Hi ${formData.recipientName},
+  const generateLinkedInMail = () => {
+    const values = templateValues();
 
-I hope this message finds you well. 
+    if (connectionType === 'new') {
+      return `Hi ${values.recipientName},
 
-My name is ${formData.name}, and I am a ${formData.position} with over ${formData.experience} years of experience. Currently, I am working at ${formData.currentCompany}. I noticed that you recently posted a job opening for a ${formData.position}, and I am very interested in exploring this opportunity.
+I hope you're doing well. I'm ${values.name}, currently working as a ${values.currentRole}. I've been following your work and admire your journey at ${values.company}.
 
-Could you please consider me if the position is still available.
+I'm exploring new opportunities and came across the ${values.role} role at ${values.company}. I believe my experience in frontend engineering aligns well with the role.
 
-Thank you for your time and consideration.
+If you're open to it, I'd appreciate a quick conversation. I'd also be grateful if you could consider referring me for this position.
+
+I've shared my resume${values.jobLink ? ' and the job link' : ''} for your reference.${values.jobLink ? `\n${values.jobLink}` : ''}
 
 Best regards,
-${formData.name}
-${formData.phone}`;
+${values.name}`;
     }
 
-    return `
-Hi ${formData.recipientName},
+    return `Hi ${values.recipientName},
 
-Great connecting with you!
+Hope you're doing well. Since we're already connected, I wanted to reach out directly.
 
-I’m a ${formData.position} with ${formData.experience}+ years of experience and I’m currently exploring new opportunities. I came across the ${formData.position} role at ${formData.company} and it looks like a great fit for my background.
+I'm currently a ${values.currentRole} and I'm exploring new opportunities. I came across the ${values.role} opening at ${values.company}, and it looks closely aligned with my frontend experience.
 
-I wanted to check if you’d be open to referring me for this role. It would really mean a lot.
+Would you be open to a quick conversation about the role? If it feels appropriate, I'd be grateful if you could consider referring me.
 
-Here’s the job link for reference:
-${formData.jobLink}
+I've shared my resume${values.jobLink ? ' and the job link' : ''} for your reference.${values.jobLink ? `\n${values.jobLink}` : ''}
 
-Thanks in advance!`;
+Best regards,
+${values.name}`;
+  };
+
+  const generateLinkedInMessage = () => {
+    const values = templateValues();
+
+    if (connectionType === 'new') {
+      return `Hi ${values.recipientName},
+
+I'm ${values.name}, currently working as a ${values.currentRole}.
+
+I came across the ${values.role} role at ${values.company} and felt my profile aligns well.
+
+I'd love to connect and learn more about your experience working there.`;
+    }
+
+    return `Hi ${values.recipientName},
+
+Hope you're doing well.
+
+I'm currently a ${values.currentRole} exploring new opportunities and came across the ${values.role} role at ${values.company}.
+
+If you're open to it, I'd really appreciate a quick conversation and would be grateful if you could consider referring me.`;
+  };
+
+  const generateOutput = () => {
+    if (deliveryType === 'email') {
+      return generateReferralEmail();
+    }
+
+    if (deliveryType === 'linkedinMail') {
+      return generateLinkedInMail();
+    }
+
+    return generateLinkedInMessage();
   };
 
   const handleCopy = async () => {
-    const text = isEmail ? generateEmail() : generateMessage();
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(generateOutput());
     } catch (err) {
       console.error('Failed to copy text:', err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Professional Email Generator
+    <div className="min-h-screen bg-slate-100">
+      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          <div>
+            <h1 className="text-lg font-bold leading-tight text-slate-950 sm:text-xl">
+              Job Mail Generator
             </h1>
-            <p className="text-lg text-gray-600">
-              Generate perfect emails for job applications and referrals
+            <p className="hidden text-sm text-slate-600 sm:block">
+              Referral emails, LinkedIn mails, and connection messages.
             </p>
           </div>
+          <span className="rounded-md bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700 sm:text-sm">
+            LinkedIn Ready
+          </span>
+        </nav>
+      </header>
 
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="flex items-center gap-10 justify-center mb-8">
-              <button
-                onClick={() => setIsHR(!isHR)}
-                className="relative inline-flex items-center rounded-full transition-all duration-300"
-                style={{ backgroundColor:'#4f46e5' }}
-              >
-                <span className="px-4 py-2 rounded-full text-white">
-                  {isHR ? 'HR' : 'Employee'}
-                </span>
-                {isHR ? (
-                  <ToggleRight className="w-6 h-6 text-white mx-2" />
-                ) : (
-                  <ToggleLeft className="w-6 h-6 text-white mx-2" />
-                )}
-              </button>
-              <button
-                onClick={() => setIsEmail(!isEmail)}
-                className="relative inline-flex items-center rounded-full transition-all duration-300"
-                style={{ backgroundColor: isEmail ? '#818cf8' : '#4f46e5' }}
-              >
-                <span className="px-4 py-2 rounded-full text-white">
-                  {isEmail ? 'Email' : 'LinkedIn'}
-                </span>
-                {isEmail ? (
-                  <ToggleRight className="w-6 h-6 text-white mx-2" />
-                ) : (
-                  <ToggleLeft className="w-6 h-6 text-white mx-2" />
-                )}
-              </button>
-            </div>
+      <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+          <EmailForm
+            connectionType={connectionType}
+            deliveryType={deliveryType}
+            formData={formData}
+            recipientType={recipientType}
+            setConnectionType={setConnectionType}
+            setDeliveryType={setDeliveryType}
+            setFormData={setFormData}
+            setRecipientType={setRecipientType}
+            onSubmit={handleSubmit}
+          />
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <EmailForm
-                formData={formData}
-                setFormData={setFormData}
-                isHR={isHR}
-                onSubmit={handleSubmit}
-                isEmail={isEmail}
+          {emailGenerated && (
+            <div className="mt-6">
+              <EmailPreview
+                title={
+                  deliveryType === 'email'
+                    ? 'Generated Email'
+                    : deliveryType === 'linkedinMail'
+                      ? 'Generated LinkedIn Mail'
+                      : 'Generated LinkedIn Message'
+                }
+                email={generateOutput()}
+                onCopy={handleCopy}
               />
-
-              {emailGenerated && (
-                <EmailPreview
-                  email={isEmail ? generateEmail() : generateMessage()}
-                  onCopy={handleCopy}
-                />
-              )}
             </div>
-          </div>
-        </div>
-      </div>
+          )}
+        </section>
+      </main>
     </div>
   );
 }
