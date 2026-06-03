@@ -81,6 +81,21 @@ ${values.phone}`;
   const generateLinkedInMail = () => {
     const values = templateValues();
 
+    if (recipientType === 'hr') {
+      return `Hi ${values.recipientName},
+
+I hope you're doing well. I'm ${values.name}, currently working as a ${values.currentRole} at ${values.currentCompany}.
+
+I'm exploring new opportunities and came across the ${values.role} role at ${values.company}. I believe my frontend engineering experience aligns well with the role.
+
+Could you please let me know if this position is still open or guide me on the next steps?
+
+I've shared my resume${values.jobLink ? ' and the job link' : ''} for your reference.${values.jobLink ? `\n${values.jobLink}` : ''}
+
+Best regards,
+${values.name}`;
+    }
+
     if (connectionType === 'new') {
       return `Hi ${values.recipientName},
 
@@ -113,14 +128,26 @@ ${values.name}`;
   const generateLinkedInMessage = () => {
     const values = templateValues();
 
+    if (recipientType === 'hr') {
+      return `Hi ${values.recipientName},
+
+I'm ${values.name}, currently a ${values.currentRole}.
+
+I came across the ${values.role} role at ${values.company} and believe my profile aligns well.
+
+Could you please let me know if this position is still open or guide me on the next steps?`;
+    }
+
     if (connectionType === 'new') {
       return `Hi ${values.recipientName},
+
+Great connecting with you.
 
 I'm ${values.name}, currently working as a ${values.currentRole}.
 
 I came across the ${values.role} role at ${values.company} and felt my profile aligns well.
 
-I'd love to connect and learn more about your experience working there.`;
+I'd love to learn more about your experience working there. If you're comfortable, I'd also be grateful if you could refer me for this role.`;
     }
 
     return `Hi ${values.recipientName},
@@ -129,7 +156,7 @@ Hope you're doing well.
 
 I'm currently a ${values.currentRole} exploring new opportunities and came across the ${values.role} role at ${values.company}.
 
-If you're open to it, I'd really appreciate a quick conversation and would be grateful if you could consider referring me.`;
+If you're open to it, I'd really appreciate a quick conversation and would be grateful if you could refer me for this role.`;
   };
 
   const generateOutput = () => {
