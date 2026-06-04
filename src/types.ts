@@ -11,5 +11,6 @@ export interface FormData {
 }
 
 export type RecipientType = 'employee' | 'hr';
-export type DeliveryType = 'email' | 'linkedinMail' | 'linkedinMessage';
+export type DeliveryType = 'email' | 'linkedinMail' | 'linkedinMessage' | 'followUp';
 export type ConnectionType = 'new' | 'old';
+export type FollowUpType = 'noResponse' | 'confirmation';

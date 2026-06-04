@@ -3,6 +3,7 @@ import { Send } from 'lucide-react';
 import {
   ConnectionType,
   DeliveryType,
+  FollowUpType,
   FormData,
   RecipientType,
 } from '../types';
@@ -10,10 +11,12 @@ import {
 interface EmailFormProps {
   connectionType: ConnectionType;
   deliveryType: DeliveryType;
+  followUpType: FollowUpType;
   formData: FormData;
   recipientType: RecipientType;
   setConnectionType: React.Dispatch<React.SetStateAction<ConnectionType>>;
   setDeliveryType: React.Dispatch<React.SetStateAction<DeliveryType>>;
+  setFollowUpType: React.Dispatch<React.SetStateAction<FollowUpType>>;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   setRecipientType: React.Dispatch<React.SetStateAction<RecipientType>>;
   onSubmit: (e: React.FormEvent) => void;
@@ -30,10 +33,12 @@ const labelClass = 'block text-sm font-medium text-slate-700';
 export function EmailForm({
   connectionType,
   deliveryType,
+  followUpType,
   formData,
   recipientType,
   setConnectionType,
   setDeliveryType,
+  setFollowUpType,
   setFormData,
   setRecipientType,
   onSubmit,
@@ -43,12 +48,13 @@ export function EmailForm({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const isLinkedIn = deliveryType !== 'email';
+  const isFollowUp = deliveryType === 'followUp';
+  const isLinkedIn = deliveryType !== 'email' && !isFollowUp;
   const isShortLinkedInMessage = deliveryType === 'linkedinMessage';
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
-      <div className="grid gap-x-5 gap-y-4 md:grid-cols-3">
+      <div className="grid gap-x-5 gap-y-4 md:grid-cols-2 xl:grid-cols-4">
         <div>
           <label className={labelClass}>Send To</label>
           <select
@@ -71,6 +77,7 @@ export function EmailForm({
             <option value="email">Email</option>
             <option value="linkedinMail">LinkedIn Mail</option>
             <option value="linkedinMessage">LinkedIn Message</option>
+            <option value="followUp">Follow-up Message</option>
           </select>
         </div>
 
@@ -84,6 +91,19 @@ export function EmailForm({
           >
             <option value="old">Old Connection</option>
             <option value="new">New Connection</option>
+          </select>
+        </div>
+
+        <div>
+          <label className={labelClass}>Follow-up Type</label>
+          <select
+            value={followUpType}
+            onChange={event => setFollowUpType(event.target.value as FollowUpType)}
+            className={selectClass}
+            disabled={!isFollowUp}
+          >
+            <option value="noResponse">No response yet</option>
+            <option value="confirmation">Check referral confirmation</option>
           </select>
         </div>
       </div>
@@ -102,108 +122,112 @@ export function EmailForm({
           />
         </div>
 
-        <div>
-          <label className={labelClass}>Your Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="e.g., Dhirendra Kumar"
-            required
-          />
-        </div>
+        {!isFollowUp && (
+          <>
+            <div>
+              <label className={labelClass}>Your Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., Dhirendra Kumar"
+                required
+              />
+            </div>
 
-        <div>
-          <label className={labelClass}>Target Role</label>
-          <input
-            type="text"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="e.g., Senior Frontend Engineer"
-            required
-          />
-        </div>
+            <div>
+              <label className={labelClass}>Target Role</label>
+              <input
+                type="text"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., Senior Frontend Engineer"
+                required
+              />
+            </div>
 
-        <div>
-          <label className={labelClass}>Target Company</label>
-          <input
-            type="text"
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="e.g., Acme Corp"
-            required
-          />
-        </div>
+            <div>
+              <label className={labelClass}>Target Company</label>
+              <input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., Acme Corp"
+                required
+              />
+            </div>
 
-        <div>
-          <label className={labelClass}>Current Role</label>
-          <input
-            type="text"
-            name="currentRole"
-            value={formData.currentRole}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="Senior Frontend Engineer"
-            required
-          />
-        </div>
+            <div>
+              <label className={labelClass}>Current Role</label>
+              <input
+                type="text"
+                name="currentRole"
+                value={formData.currentRole}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="Senior Frontend Engineer"
+                required
+              />
+            </div>
 
-        <div>
-          <label className={labelClass}>Current Company</label>
-          <input
-            type="text"
-            name="currentCompany"
-            value={formData.currentCompany}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="e.g., JLL Technologies"
-            required={!isShortLinkedInMessage}
-          />
-        </div>
+            <div>
+              <label className={labelClass}>Current Company</label>
+              <input
+                type="text"
+                name="currentCompany"
+                value={formData.currentCompany}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., JLL Technologies"
+                required={!isShortLinkedInMessage}
+              />
+            </div>
 
-        <div>
-          <label className={labelClass}>Years of Experience</label>
-          <input
-            type="text"
-            name="experience"
-            value={formData.experience}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="e.g., 4"
-            required={!isShortLinkedInMessage}
-          />
-        </div>
+            <div>
+              <label className={labelClass}>Years of Experience</label>
+              <input
+                type="text"
+                name="experience"
+                value={formData.experience}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., 4"
+                required={!isShortLinkedInMessage}
+              />
+            </div>
 
-        <div>
-          <label className={labelClass}>Phone Number</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="e.g., +91 9999999999"
-            required={deliveryType === 'email'}
-          />
-        </div>
+            <div>
+              <label className={labelClass}>Phone Number</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., +91 9999999999"
+                required={deliveryType === 'email'}
+              />
+            </div>
 
-        <div className="md:col-span-2 xl:col-span-3">
-          <label className={labelClass}>Job Post Link</label>
-          <input
-            type="url"
-            name="jobLink"
-            value={formData.jobLink}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder="https://..."
-          />
-        </div>
+            <div className="md:col-span-2 xl:col-span-3">
+              <label className={labelClass}>Job Post Link</label>
+              <input
+                type="url"
+                name="jobLink"
+                value={formData.jobLink}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="https://..."
+              />
+            </div>
+          </>
+        )}
       </div>
 
       <button

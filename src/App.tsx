@@ -4,6 +4,7 @@ import { EmailPreview } from './components/EmailPreview';
 import {
   ConnectionType,
   DeliveryType,
+  FollowUpType,
   FormData,
   RecipientType,
 } from './types';
@@ -14,6 +15,7 @@ function App() {
   const [recipientType, setRecipientType] = useState<RecipientType>('employee');
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('linkedinMessage');
   const [connectionType, setConnectionType] = useState<ConnectionType>('old');
+  const [followUpType, setFollowUpType] = useState<FollowUpType>('noResponse');
   const [emailGenerated, setEmailGenerated] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: 'Dhirendra Kumar',
@@ -159,9 +161,33 @@ I'm currently a ${values.currentRole} exploring new opportunities and came acros
 If you're open to it, I'd really appreciate a quick conversation and would be grateful if you could refer me for this role.`;
   };
 
+  const generateFollowUpMessage = () => {
+    const values = templateValues();
+
+    if (followUpType === 'confirmation') {
+      return `Hi ${values.recipientName},
+
+Hope you're doing well.
+
+Just following up on the referral request. Did you get a chance to refer me for the role?
+
+Thanks again for your support and time 🙂`;
+    }
+
+    return `Hi ${values.recipientName},
+
+Just following up on my referral request. Whenever you get a chance, I'd really appreciate your help.
+
+Thanks again for your support and time 🙂`;
+  };
+
   const generateOutput = () => {
     if (deliveryType === 'email') {
       return generateReferralEmail();
+    }
+
+    if (deliveryType === 'followUp') {
+      return generateFollowUpMessage();
     }
 
     if (deliveryType === 'linkedinMail') {
@@ -185,10 +211,10 @@ If you're open to it, I'd really appreciate a quick conversation and would be gr
         <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <div>
             <h1 className="text-lg font-bold leading-tight text-slate-950 sm:text-xl">
-              Job Mail Generator
+              Referral Message Generator
             </h1>
             <p className="hidden text-sm text-slate-600 sm:block">
-              Referral emails, LinkedIn mails, and connection messages.
+              Referral emails, LinkedIn messages, and follow-ups.
             </p>
           </div>
           <span className="rounded-md bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700 sm:text-sm">
@@ -202,10 +228,12 @@ If you're open to it, I'd really appreciate a quick conversation and would be gr
           <EmailForm
             connectionType={connectionType}
             deliveryType={deliveryType}
+            followUpType={followUpType}
             formData={formData}
             recipientType={recipientType}
             setConnectionType={setConnectionType}
             setDeliveryType={setDeliveryType}
+            setFollowUpType={setFollowUpType}
             setFormData={setFormData}
             setRecipientType={setRecipientType}
             onSubmit={handleSubmit}
@@ -217,9 +245,11 @@ If you're open to it, I'd really appreciate a quick conversation and would be gr
                 title={
                   deliveryType === 'email'
                     ? 'Generated Email'
-                    : deliveryType === 'linkedinMail'
-                      ? 'Generated LinkedIn Mail'
-                      : 'Generated LinkedIn Message'
+                    : deliveryType === 'followUp'
+                      ? 'Generated Follow-up Message'
+                      : deliveryType === 'linkedinMail'
+                        ? 'Generated LinkedIn Mail'
+                        : 'Generated LinkedIn Message'
                 }
                 email={generateOutput()}
                 onCopy={handleCopy}
