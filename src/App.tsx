@@ -143,22 +143,25 @@ Could you please let me know if this position is still open or guide me on the n
     if (connectionType === 'new') {
       return `Hi ${values.recipientName},
 
-Great connecting with you.
+Thanks for accepting my request.
 
-I'm ${values.name}, currently working as a ${values.currentRole}.
+I came across the ${values.role} opening at ${values.company} and it looks closely aligned with my frontend experience in building scalable web applications.
 
-I came across the ${values.role} role at ${values.company} and felt my profile aligns well.
+Would you be comfortable referring me for this opportunity?
 
-I'd love to learn more about your experience working there. If you're comfortable, I'd also be grateful if you could refer me for this role.`;
+Really appreciate your help.
+`;
     }
 
     return `Hi ${values.recipientName},
 
 Hope you're doing well.
 
-I'm currently a ${values.currentRole} exploring new opportunities and came across the ${values.role} role at ${values.company}.
+I came across the ${values.currentRole} opening at ${values.company}, and it looks closely aligned with my frontend experience in building scalable web applications.
 
-If you're open to it, I'd really appreciate a quick conversation and would be grateful if you could refer me for this role.`;
+Would you be comfortable referring me for this opportunity?
+
+Really appreciate your help.`;
   };
 
   const generateFollowUpMessage = () => {
